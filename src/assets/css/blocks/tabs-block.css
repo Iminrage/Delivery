@@ -14,7 +14,7 @@
 
 .tabs-block__pick-up,
 .tabs-block__item-delivery {
-  display: none;
+  display: flex;
   transition: opacity 1s var(--transition-base);
 }
 
@@ -52,7 +52,7 @@
   cursor: pointer;
 
   transition: box-shadow var(--transition-base),
-  background var(--transition-base);
+    background var(--transition-base);
 }
 
 .tabs-block > label:last-of-type {
