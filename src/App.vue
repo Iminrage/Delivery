@@ -6,7 +6,7 @@
         <h1 class="visually-hidden">Заказ доставки в интернет-магазине</h1>
         <div class="tabs-block">
           <h2>Выберите способ получения товара</h2>
-          <Tabs :activeTab="activeTab" @input="setActiveTab"/>
+          <TheWayOfDelivery :activeTab="activeTab" @input="setActiveTab"/>
           <div class="tabs-block__content">
             <section v-if="activeTab===0" class="form tabs-block__pick-up">
               <h2 class="visually-hidden">Форма самовывоза</h2>
@@ -348,12 +348,12 @@
 
 <script>
 import "./assets/css/style.css";
-import Tabs from "./components/Tabs";
+import TheWayOfDelivery from "./components/TheWayOfDelivery";
 
 export default {
   name: "App",
   components: {
-    Tabs,
+    TheWayOfDelivery,
   },
   data() {
     return {
