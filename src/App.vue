@@ -6,9 +6,9 @@
         <h1 class="visually-hidden">Заказ доставки в интернет-магазине</h1>
         <div class="tabs-block">
           <h2>Выберите способ получения товара</h2>
-          <TheWayOfDelivery :activeTab="activeTab" @input="setActiveTab"/>
+          <TheWayOfDelivery :deliveryWay="deliveryWay" @input="changeDeliveryWay" />
           <div class="tabs-block__content">
-            <section v-if="activeTab===0" class="form tabs-block__pick-up">
+            <section v-if="deliveryWay === 'Самовывоз'" class="form tabs-block__pick-up">
               <h2 class="visually-hidden">Форма самовывоза</h2>
               <form action="#" method="POST">
                 <h3>Самовывоз</h3>
@@ -164,7 +164,10 @@
                 </div>
               </form>
             </section>
-            <section v-if="activeTab===1" class="form tabs-block__item-delivery">
+            <section
+              v-if="deliveryWay === 'Доставка курьером'"
+              class="form tabs-block__item-delivery"
+            >
               <h2 class="visually-hidden">Форма самовывоза</h2>
               <form action="#" method="POST">
                 <h3>Доставка</h3>
@@ -357,12 +360,12 @@ export default {
   },
   data() {
     return {
-      activeTab: 0,
+      deliveryWay: "Самовывоз",
     };
   },
   methods: {
-    setActiveTab(index) {
-      this.activeTab = index;
+    changeDeliveryWay(theWay) {
+      this.deliveryWay = theWay;
     },
   },
 };

@@ -5,8 +5,8 @@
         :id="item.id"
         type="radio"
         name="tab"
-        @input="$emit('input', index)"
-        :value="index"
+        @input="$emit('input', $event.target.value)"
+        :value="item.title"
         :checked="index === 0"
       />
       <label :key="`label-${item.key}`" :for="item.id">
@@ -46,9 +46,9 @@ const waysOfDelivery = [
 export default {
   name: "TheWayOfDelivery",
   props: {
-    activeTab: {
-      type: Number,
-      default: 0,
+    deliveryWay: {
+      type: String,
+      default: "Самовывоз",
     },
   },
   data() {
