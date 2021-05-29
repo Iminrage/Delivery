@@ -7,21 +7,13 @@
         <div class="tabs-block">
           <h2>Выберите способ получения товара</h2>
           <TheWayOfDelivery v-model="deliveryWay" />
-          <div class="tabs-block__content">
-            <section
-              v-if="deliveryWay === 'pickUp'"
-              class="form tabs-block__pick-up"
-            >
-              <h2 class="visually-hidden">Форма самовывоза</h2>
-              <TheFormPickup></TheFormPickup>
-            </section>
-            <section
-              v-if="deliveryWay === 'delivery'"
-              class="form tabs-block__item-delivery"
-            >
-              <h2 class="visually-hidden">Форма доставки курьером</h2>
-              <TheFormDelivery></TheFormDelivery>
-            </section>
+          <div v-if="supportedCities.length > 0" class="tabs-block__content">
+            <keep-alive>
+              <component
+                :is="renderWayOfDelivery"
+                :supportedCities="supportedCities"
+              />
+            </keep-alive>
           </div>
         </div>
       </main>
@@ -30,22 +22,52 @@
 </template>
 
 <script>
-import "./assets/css/style.css";
 import TheWayOfDelivery from "./components/TheWayOfDelivery";
-import TheFormPickup from "./components/TheFormPickup";
-import TheFormDelivery from "./components/TheFormDelivery";
+import ThePickup from "./components/ThePickup";
+import TheDelivery from "./components/TheDelivery";
+
+import { getPickUpPoints } from "./data/pickUpPoints.js";
+
+import "./assets/css/style.css";
 
 export default {
   name: "App",
   components: {
     TheWayOfDelivery,
-    TheFormPickup,
-    TheFormDelivery,
+    ThePickup,
+    TheDelivery,
   },
   data() {
     return {
       deliveryWay: "pickUp",
+      supportedCities: [],
     };
+  },
+  mounted: async function () {
+    const response = await getPickUpPoints();
+    this.supportedCities = response.cities.map((item) => {
+      return {
+        key: item.id,
+        id: item["city-id"],
+        title: item.city,
+        value: item["city-id"],
+        deliveryPoints: item["delivery-points"].map((point) => {
+          return {
+            key: point.address,
+            id: point.address,
+            title: point.address,
+            value: point.coordinates,
+          };
+        }),
+      };
+    });
+  },
+  computed: {
+    renderWayOfDelivery: function () {
+      return this.deliveryWay === "pickUp"
+        ? "ThePickup"
+        : "TheDelivery";
+    },
   },
 };
 </script>
