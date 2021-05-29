@@ -1,13 +1,14 @@
 <template>
   <div class="tabs-block">
-    <template v-for="(item, index) in waysOfDelivery">
-      <input :key="`input-${item.key}`"
+    <template v-for="item in waysOfDelivery">
+      <input
+        :key="`input-${item.key}`"
         :id="item.id"
         type="radio"
         name="tab"
-        @input="$emit('input', $event.target.value)"
-        :value="item.title"
-        :checked="index === 0"
+        @input="$emit('input', item.value)"
+        :value="item.value"
+        :checked="item.value === value"
       />
       <label :key="`label-${item.key}`" :for="item.id">
         <span>{{ item.title }}</span>
@@ -27,6 +28,7 @@ const waysOfDelivery = [
     key: 1,
     id: "tab-pick-up",
     title: "Самовывоз",
+    value: "pickUp",
     img: {
       name: "icon-pick-up.svg",
       alt: "Самовывоз",
@@ -36,6 +38,7 @@ const waysOfDelivery = [
     key: 2,
     id: "tab-delivery",
     title: "Доставка курьером",
+    value: "delivery",
     img: {
       name: "icon-delivery.svg",
       alt: "Доставка курьером",
@@ -46,7 +49,7 @@ const waysOfDelivery = [
 export default {
   name: "TheWayOfDelivery",
   props: {
-    deliveryWay: {
+    value: {
       type: String,
       default: "Самовывоз",
     },
