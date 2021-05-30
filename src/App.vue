@@ -27,7 +27,7 @@ import TheWayOfDelivery from "./components/TheWayOfDelivery";
 import ThePickup from "./components/ThePickup";
 import TheDelivery from "./components/TheDelivery";
 
-import { getPickUpPoints } from "./data/pickUpPoints.js";
+import { getPickUpPoints } from "./utils/pickUpPoints.js";
 
 import "./assets/css/style.css";
 
