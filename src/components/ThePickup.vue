@@ -15,7 +15,7 @@
         :tabs="pickPoints"
         v-model="selectedPickPoint"
       />
-      <div class="map"></div>
+      <TheMap :lat="pickPointLatitude" :long="pickPointLongitude" />
       <h3>Способ оплаты</h3>
       <div
         class="input-wrapper input-wrapper--radio-group input-wrapper--payment-method"
@@ -94,11 +94,13 @@
 
 <script>
 import RadioGroupTabs from "./RadioGroupTabs";
+import TheMap from "./TheMap";
 
 export default {
   name: "ThePickup",
   components: {
     RadioGroupTabs,
+    TheMap,
   },
   props: {
     supportedCities: {
@@ -124,6 +126,12 @@ export default {
         ).deliveryPoints;
       }
       return [];
+    },
+    pickPointLatitude: function () {
+      return this.selectedPickPoint[0];
+    },
+    pickPointLongitude: function () {
+      return this.selectedPickPoint[1];
     },
   },
   watch: {

@@ -15,6 +15,7 @@
               />
             </keep-alive>
           </div>
+          <div class="loading" v-else>Loading...</div>
         </div>
       </main>
     </div>
@@ -64,13 +65,15 @@ export default {
   },
   computed: {
     renderWayOfDelivery: function () {
-      return this.deliveryWay === "pickUp"
-        ? "ThePickup"
-        : "TheDelivery";
+      return this.deliveryWay === "pickUp" ? "ThePickup" : "TheDelivery";
     },
   },
 };
 </script>
 
-<style>
+<style scoped lang="css">
+.loading {
+  margin: 0 auto;
+  padding: 100px 0;
+}
 </style>
