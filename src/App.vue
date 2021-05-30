@@ -8,12 +8,16 @@
           <h2>Выберите способ получения товара</h2>
           <TheWayOfDelivery v-model="deliveryWay" />
           <div v-if="supportedCities.length > 0" class="tabs-block__content">
-            <keep-alive>
-              <component
-                :is="renderWayOfDelivery"
-                :supportedCities="supportedCities"
-              />
-            </keep-alive>
+            <component
+              :is="renderWayOfDelivery"
+              :supportedCities="supportedCities"
+              :selectedCity="selectedCity"
+              :selectedPickPoint="selectedPickPoint"
+              :paymentInfo="paymentInfo"
+              @changePaymentInfo="changePaymentInfo"
+              @changePickPoint="changePickPoint"
+              @changeCity="changeCity"
+            />
           </div>
           <div class="loading" v-else>Loading...</div>
         </div>
@@ -42,6 +46,12 @@ export default {
     return {
       deliveryWay: "pickUp",
       supportedCities: [],
+      selectedCity: "",
+      selectedPickPoint: "",
+      paymentInfo: {
+        cardNumber: "",
+        telNumber: "",
+      },
     };
   },
   mounted: async function () {
@@ -62,10 +72,33 @@ export default {
         }),
       };
     });
+    this.selectedCity = response.cities[0]["city-id"];
+    this.selectedPickPoint =
+      response.cities[0]["delivery-points"][0].coordinates;
   },
   computed: {
     renderWayOfDelivery: function () {
       return this.deliveryWay === "pickUp" ? "ThePickup" : "TheDelivery";
+    },
+  },
+  methods: {
+    changePaymentInfo(info) {
+      this.paymentInfo = info;
+    },
+
+    changeCity(city) {
+      this.selectedCity = city;
+    },
+
+    changePickPoint(pickPoint) {
+      this.selectedPickPoint = pickPoint;
+    },
+  },
+  watch: {
+    selectedCity: function () {
+      this.selectedPickPoint = this.supportedCities.find(
+        (item) => item.value === this.selectedCity
+      ).deliveryPoints[0].value;
     },
   },
 };

@@ -5,22 +5,22 @@
       :class="!cardNumberValidate && 'input-wrapper--error'"
     >
       <h4>Номер карты</h4>
-      <template v-for="item in cardForm">
+      <template v-for="(item, index) in cardInputs">
         <input
-          :ref="item.ref"
           :key="`input-${item.id}`"
           :id="`pick-up-user-card-${item.id}`"
           v-model="item.value"
-          @input="catchInput($event.target.value, item.next)"
-          @keydown.backspace="catchBackSpace($event.target.value, item.prev)"
+          @input="catchInput($event.target.value, index)"
+          @keydown.backspace="moveFocusBack($event.target.value, index)"
           type="text"
           maxlength="4"
           required
+          :ref="`card-input-ref-${index}`"
         />
         <label
           :key="`label-${item.id}`"
           :for="`pick-up-user-card-${item.id}`"
-          :aria-label="`${item.labelOrder} четыре цифр с карты`"
+          :aria-label="`${index} четыре цифр с карты`"
         ></label>
       </template>
       <div class="input-wrapper__error">Введите верный номер карты</div>
@@ -33,69 +33,75 @@ import { luhnAlgorithm } from "../utils/luhnAlgorithm";
 
 export default {
   name: "PaymentCardNumber",
+
+  props: {
+    value: {
+      type: String,
+      required: true,
+    },
+  },
+
   data() {
     return {
-      cardForm: [
-        {
-          id: 1,
-          value: "",
-          ref: "firstCardInput",
-          prev: null,
-          next: "secondCardInput",
-          labelOrder: "Первые",
-        },
-        {
-          id: 2,
-          value: "",
-          ref: "secondCardInput",
-          prev: "firstCardInput",
-          next: "thirdCardInput",
-          labelOrder: "Вторые",
-        },
-        {
-          id: 3,
-          value: "",
-          ref: "thirdCardInput",
-          prev: "secondCardInput",
-          next: "fourthCardInput",
-          labelOrder: "Третьи",
-        },
-        {
-          id: 4,
-          value: "",
-          ref: "fourthCardInput",
-          prev: "thirdCardInput",
-          next: null,
-          labelOrder: "Четвертые",
-        },
-      ],
+      cardInputs: [],
     };
   },
+
+  created() {
+    this.cardInputs = this.sliceCardNumber();
+  },
+
   computed: {
-    cardNumber() {
-      let number = "";
-      for (let item of this.cardForm) {
-        number = number + item.value.toString();
-      }
-      return number;
-    },
     cardNumberValidate() {
-      if (this.cardNumber.length >= 15) {
-        return luhnAlgorithm(this.cardNumber);
+      if (this.value.length >= 15) {
+        return luhnAlgorithm(this.value);
       }
-      return true
+      return true;
+    },
+
+    fullCardNumber() {
+      let fullNum = "";
+      for (let item of this.cardInputs) {
+        fullNum = fullNum + item.value.toString();
+      }
+      return fullNum;
     },
   },
+
   methods: {
-    catchInput(val, next) {
-      if (val.length === 4 && next) {
-        this.$refs[next][0].focus();
+    sliceCardNumber() {
+      const cardNumberFromProps = this.value.length
+        ? this.value.match(/.{1,4}/g)
+        : new Array(4).fill("");
+      return new Array(4).fill(null).map((item, index) => {
+        return {
+          id: index,
+          value: cardNumberFromProps[index] ? cardNumberFromProps[index] : "",
+        };
+      });
+    },
+
+    moveFocusForward(index) {
+      if (index < this.cardInputs.length - 1)
+        this.$refs[`card-input-ref-${index + 1}`][0].focus();
+    },
+
+    moveFocusBack(val, index) {
+      if (val.length === 0 && index > 0) {
+        this.$refs[`card-input-ref-${index - 1}`][0].focus();
       }
     },
-    catchBackSpace(val, prev) {
-      if (val.length === 0 && prev) {
-        this.$refs[prev][0].focus();
+
+    catchInput(val, index) {
+      if (val.length === 4) {
+        this.moveFocusForward(index);
       }
+    },
+  },
+
+  watch: {
+    fullCardNumber: function () {
+      this.$emit("input", this.fullCardNumber);
     },
   },
 };

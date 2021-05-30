@@ -20,7 +20,12 @@
       />
       <label for="pick-up-cash">Наличные курьеру</label>
     </div>
-    <PaymentCardNumber @input="handleCardNumberChange" />
+
+    <PaymentCardNumber
+      @input="handleCardNumber"
+      :value="paymentInfo.cardNumber"
+    />
+
     <div class="input-wrapper input-wrapper--input">
       <h4>Номер телефона</h4>
       <input id="pick-up-user-phone" type="text" placeholder="+7 (" required />
@@ -39,14 +44,31 @@ import PaymentCardNumber from "./PaymentCardNumber";
 
 export default {
   name: "PaymentForm",
+
   components: {
     PaymentCardNumber,
   },
+
+  props: {
+    paymentInfo: {
+      type: Object,
+      default() {
+        return {
+          cardNumber: "",
+          telNumber: "",
+        };
+      },
+    },
+  },
+
   methods: {
-    handleCardNumberChange(data) {
-      console.log(data);
-    }
-  }
+    handleCardNumber(data) {
+      this.$emit("changePaymentInfo", {
+        ...this.paymentInfo,
+        cardNumber: data,
+      });
+    },
+  },
 };
 </script>
 

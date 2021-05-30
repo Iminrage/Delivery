@@ -4,8 +4,10 @@
 
     <form action="#" method="POST">
       <h3>Доставка</h3>
+
       <RadioGroupTabs
-        v-model="selectedCity"
+        @input="changeCity"
+        :value="selectedCity"
         title="Город"
         name="city"
         :tabs="supportedCities"
@@ -54,66 +56,12 @@
           </div>
         </div>
       </div>
-      <h3>Способ оплаты</h3>
-      <div
-        class="input-wrapper input-wrapper--radio-group input-wrapper--payment-method"
-      >
-        <input
-          id="delivery-card"
-          type="radio"
-          name="payment-method"
-          value="card"
-        />
-        <label for="delivery-card">Карта</label>
-        <input
-          id="delivery-cash"
-          type="radio"
-          name="payment-method"
-          value="cash"
-          checked
-        />
-        <label for="delivery-cash">Наличные курьеру</label>
-      </div>
-      <div
-        class="input-wrapper input-wrapper--hidden input-wrapper--input-group"
-      >
-        <h4>Номер карты</h4>
-        <input id="delivery-user-card-1-4" type="text" required />
-        <label
-          for="delivery-user-card-1-4"
-          aria-label="Первые четыре цифр с карты"
-        ></label>
-        <input id="delivery-user-card-5-8" type="text" required />
-        <label
-          for="delivery-user-card-5-8"
-          aria-label="Вторые четыре цифр с карты"
-        ></label>
-        <input id="delivery-user-card-9-12" type="text" required />
-        <label
-          for="delivery-user-card-9-12"
-          aria-label="Третьи четыре цифр с карты"
-        ></label>
-        <input id="delivery-user-card-13-16" type="text" required />
-        <label
-          for="delivery-user-card-13-16"
-          aria-label="Четвёртые четыре цифр с карты"
-        ></label>
-        <div class="input-wrapper__error">Введите верный номер карты</div>
-      </div>
-      <div class="input-wrapper input-wrapper--input">
-        <h4>Номер телефона</h4>
-        <input
-          id="delivery-user-phone"
-          type="text"
-          placeholder="+7 ("
-          required
-        />
-        <label for="delivery-user-phone" aria-label="Укажите телефон"></label>
-        <div class="input-wrapper__error">Укажите телефон</div>
-      </div>
-      <span class="form__info"
-        >Курьер позвонит на указанный номер за час до доставки заказа.</span
-      >
+
+      <PaymentForm
+        @changePaymentInfo="changePaymentInfo"
+        :paymentInfo="paymentInfo"
+      />
+
       <div class="form__submit-block">
         <button class="form__submit-btn" type="submit">Заказать</button>
         <div class="form__submit-state">
@@ -129,25 +77,46 @@
 
 <script>
 import RadioGroupTabs from "./RadioGroupTabs";
+import PaymentForm from "./PaymentForm";
 
 export default {
   name: "TheDelivery",
+  
   components: {
     RadioGroupTabs,
+    PaymentForm,
   },
+
   props: {
     supportedCities: {
       type: Array,
       required: true,
     },
+
+    selectedCity: {
+      type: String,
+      required: true,
+    },
+
+    paymentInfo: {
+      type: Object,
+      default() {
+        return {
+          cardNumber: "",
+          telNumber: "",
+        };
+      },
+    },
   },
-  data() {
-    return {
-      selectedCity: "",
-    };
-  },
-  created: function () {
-    this.selectedCity = this.supportedCities[0].id;
+
+  methods: {
+    changePaymentInfo(paymentInfo) {
+      this.$emit("changePaymentInfo", paymentInfo);
+    },
+
+    changeCity(city) {
+      this.$emit("changeCity", city)
+    }
   },
 };
 </script>
