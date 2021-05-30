@@ -36,32 +36,7 @@
         />
         <label for="pick-up-cash">Наличные курьеру</label>
       </div>
-      <div
-        class="input-wrapper input-wrapper--error input-wrapper--input-group"
-      >
-        <h4>Номер карты</h4>
-        <input id="pick-up-user-card-1-4" type="text" required />
-        <label
-          for="pick-up-user-card-1-4"
-          aria-label="Первые четыре цифр с карты"
-        ></label>
-        <input id="pick-up-user-card-5-8" type="text" required />
-        <label
-          for="pick-up-user-card-5-8"
-          aria-label="Вторые четыре цифр с карты"
-        ></label>
-        <input id="pick-up-user-card-9-12" type="text" required />
-        <label
-          for="pick-up-user-card-9-12"
-          aria-label="Третьи четыре цифр с карты"
-        ></label>
-        <input id="pick-up-user-card-13-16" type="text" required />
-        <label
-          for="pick-up-user-card-13-16"
-          aria-label="Четвёртые четыре цифр с карты"
-        ></label>
-        <div class="input-wrapper__error">Введите верный номер карты</div>
-      </div>
+      <PaymentCardNumber></PaymentCardNumber>
       <div class="input-wrapper input-wrapper--input">
         <h4>Номер телефона</h4>
         <input
@@ -95,12 +70,14 @@
 <script>
 import RadioGroupTabs from "./RadioGroupTabs";
 import TheMap from "./TheMap";
+import PaymentCardNumber from "./PaymentCardNumber";
 
 export default {
   name: "ThePickup",
   components: {
     RadioGroupTabs,
     TheMap,
+    PaymentCardNumber
   },
   props: {
     supportedCities: {
