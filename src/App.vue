@@ -37,11 +37,13 @@ import "./assets/css/style.css";
 
 export default {
   name: "App",
+
   components: {
     TheWayOfDelivery,
     ThePickup,
     TheDelivery,
   },
+
   data() {
     return {
       deliveryWay: "pickUp",
@@ -54,6 +56,7 @@ export default {
       },
     };
   },
+
   mounted: async function () {
     const response = await getPickUpPoints();
     this.supportedCities = response.cities.map((item) => {
@@ -76,11 +79,13 @@ export default {
     this.selectedPickPoint =
       response.cities[0]["delivery-points"][0].coordinates;
   },
+  
   computed: {
     renderWayOfDelivery: function () {
       return this.deliveryWay === "pickUp" ? "ThePickup" : "TheDelivery";
     },
   },
+
   methods: {
     changePaymentInfo(info) {
       this.paymentInfo = info;
@@ -94,6 +99,7 @@ export default {
       this.selectedPickPoint = pickPoint;
     },
   },
+
   watch: {
     selectedCity: function () {
       this.selectedPickPoint = this.supportedCities.find(

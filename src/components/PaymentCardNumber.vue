@@ -53,7 +53,7 @@ export default {
 
   computed: {
     cardNumberValidate() {
-      if (this.value.length >= 15) {
+      if (this.value.length) {
         return luhnAlgorithm(this.value);
       }
       return true;
